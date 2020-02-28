@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 91ec4f203e5e00c6aa2577127ca315e9b055a36d07d90afd85a5853926fbd7bf
+-- hash: 22365fc4f6bc3ce8eef2c36d87d29a38ba16b70f2dad2b66fb74dffa1490a4c2
 
 name:           types
 version:        0.1.0.0
@@ -36,5 +36,6 @@ executable types-exe
       base >=4.7 && <5
     , haskeline
     , mtl
+    , parsec
     , pretty
   default-language: Haskell2010

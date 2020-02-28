@@ -34,7 +34,8 @@ executables:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
-    - pretty
     - haskeline
     - mtl
+    - parsec
+    - pretty
 
