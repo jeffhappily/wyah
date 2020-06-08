@@ -1,12 +1,12 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.31.2.
+-- This file has been generated from package.yaml by hpack version 0.33.0.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 22365fc4f6bc3ce8eef2c36d87d29a38ba16b70f2dad2b66fb74dffa1490a4c2
+-- hash: 82a0238d89f0ee60acf305a85c94086e39f5dab045ecc781b047edf40ceb752b
 
-name:           types
+name:           untyped
 version:        0.1.0.0
 description:    Please see the README on GitHub at <https://github.com/jeffhappily/wyah#readme>
 homepage:       https://github.com/jeffhappily/wyah#readme
@@ -21,19 +21,20 @@ source-repository head
   type: git
   location: https://github.com/jeffhappily/wyah
 
-executable types-exe
+executable untyped-exe
   main-is: Main.hs
   other-modules:
       AST
       Eval
       Parser
       Pretty
-      Paths_types
+      Paths_untyped
   hs-source-dirs:
       ./.
   ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
+    , containers
     , haskeline
     , mtl
     , parsec

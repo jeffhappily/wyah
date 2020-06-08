@@ -17,6 +17,9 @@ process line = do
   case res of
     Left err -> print err
     Right ex -> do
+      putStrLn "Expr: "
+      print ex
+      putStrLn "Result: "
       let (out, ~steps) = runEval ex
       mapM_ showStep steps
       print out

@@ -1,4 +1,4 @@
-name:                types
+name:                untyped
 version:             0.1.0.0
 github:              "jeffhappily/wyah"
 license:             BSD3
@@ -26,7 +26,7 @@ ghc-options:
 - -Wall
 
 executables:
-  types-exe:
+  untyped-exe:
     main:                Main.hs
     source-dirs:         .
     ghc-options:
@@ -34,6 +34,7 @@ executables:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
+    - containers
     - haskeline
     - mtl
     - parsec

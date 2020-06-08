@@ -37,7 +37,7 @@ lambda = do
   reservedOp "\\"
   whiteSpace
   names <- many1 ident
-  reservedOp "->"
+  reservedOp "."
   body <- expr
   return $ foldr Lam body names
 
