@@ -111,5 +111,4 @@ runEval ex =
     Left err -> Left err
     Right t -> case eval ex of
       Nothing -> Left $ TypeMismatch TBool TBool
-      Just ex -> Right (ex, t)
-  
+      Just ex' -> Right (ex', t)
