@@ -8,7 +8,6 @@ import qualified Data.Map as Map
 import Control.Monad.State
 import Control.Monad.Writer
 
-
 data Value
   = VInt Integer
   | VBool Bool

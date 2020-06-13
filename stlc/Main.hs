@@ -26,4 +26,3 @@ main = runInputT defaultSettings loop
       Nothing -> outputStrLn "Goodbye."
       Just input -> (liftIO $ process input) >> loop
 
--- main = undefined
