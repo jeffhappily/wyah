@@ -1,0 +1,43 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.33.0.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: 7988a97b5d4df3efabc8a1b8e08c1cbcf86f5b8cff5b3b470151ce46abdd5325
+
+name:           stlc
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/jeffhappily/wyah#readme>
+homepage:       https://github.com/jeffhappily/wyah#readme
+bug-reports:    https://github.com/jeffhappily/wyah/issues
+author:         Jeff
+maintainer:     goodboy96@live.com.my
+copyright:      2020 Jeff
+license:        BSD3
+build-type:     Simple
+
+source-repository head
+  type: git
+  location: https://github.com/jeffhappily/wyah
+
+executable stlc-exe
+  main-is: Main.hs
+  other-modules:
+      Eval
+      Parser
+      Syntax
+      Type
+      TypeCheck
+      Paths_stlc
+  hs-source-dirs:
+      ./.
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , containers
+    , haskeline
+    , mtl
+    , parsec
+    , pretty
+  default-language: Haskell2010

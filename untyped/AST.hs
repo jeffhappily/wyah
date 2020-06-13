@@ -7,7 +7,6 @@ data Expr
   | App Expr Expr
   | Lam Name Expr
   | Lit Lit
-  -- deriving Show
 
 instance Show Expr where
   show (Var n) = n
@@ -18,7 +17,6 @@ instance Show Expr where
 data Lit
   = LInt Int
   | LBool Bool
-  -- deriving Show
 
 instance Show Lit where
   show (LInt i) = show i
