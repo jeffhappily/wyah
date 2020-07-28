@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 693a08131884cbe630a3ea6aac8f39a9e10f3a0842bb133a92f0fc9b10fc7f0d
+-- hash: 6cbe835aecde963daa3e62a154cc0f113b8b402eae7c54f92f3fdfa29a88143c
 
 name:           interpreter
 version:        0.1.0.0
@@ -26,6 +26,7 @@ executable interpreter-exe
   other-modules:
       CallByNeed
       CallByValue
+      HOAS
       Paths_interpreter
   hs-source-dirs:
       ./.
