@@ -1,53 +1,62 @@
-module Eval (
+module Untyped.Eval (
   runEval
 ) where
 
-import AST
-import qualified Data.Map as Map
+import Untyped.AST
 
 import Control.Monad.State
 import Control.Monad.Writer
+import qualified Data.Map as Map
 
 data Value
   = VInt Integer
   | VBool Bool
-  | VClosure String Expr (Eval.Scope)
+  | VClosure String Expr Scope
 
 instance Show Value where
   show (VInt x) = show x
   show (VBool x) = show x
-  show (VClosure a b _) = "\\" <> a <> " . " <> show b
+  show (VClosure a b env) = "\\" <> a <> " . " <> printExprWithScope b env
 
-data EvalState = EvalState
+printExprWithScope :: Expr -> Scope -> String
+printExprWithScope (Var x) env = maybe x show $ env Map.!? x
+printExprWithScope (App a b) env = "(" <> printExprWithScope a env <> " " <> printExprWithScope b env <> ")"
+printExprWithScope (Lam a b) env = "(" <> "\\" <> a <> " . " <> printExprWithScope b env <> ")"
+printExprWithScope (Lit l) _ = show l
+
+newtype EvalState = EvalState
   { depth :: Int
   } deriving (Show)
 
+-- | Run evaluation after increasing the depth, then decrease it afterwards
 inc :: Eval a -> Eval a
 inc m = do
-  modify $ \s -> s { depth = (depth s) + 1 }
+  modify $ \s -> s { depth = depth s + 1 }
   out <- m
-  modify $ \s -> s { depth = (depth s) - 1 }
+  modify $ \s -> s { depth = depth s - 1 }
   return out
 
+-- | Create @Step@ and push to @Eval@ state
 red :: Expr -> Eval ()
 red x = do
   d <- gets depth
   tell [(d, x)]
   return ()
 
+-- | Each step being evaluated
 type Step = (Int, Expr)
+
+-- | Evaluation monad transformer
 type Eval a = WriterT [Step] (State EvalState) a
 
+-- | Environment
 type Scope = Map.Map String Value
 
-eval :: Eval.Scope -> Expr -> Eval Value
+eval :: Scope -> Expr -> Eval Value
 eval env expr = case expr of
 
   Lit (LInt x) -> do
     return $ VInt (fromIntegral x)
-
-  Lit (LBool x) -> do
-    return $ VBool x
 
   Var x -> do
     red expr

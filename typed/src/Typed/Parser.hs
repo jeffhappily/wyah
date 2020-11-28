@@ -1,7 +1,8 @@
-module Parser where
+module Typed.Parser where
 
-import Eval
+import Typed.Eval
 
+import Data.Functor (($>))
 import Text.Parsec
 import Text.Parsec.String (Parser)
 import Text.Parsec.Language (haskellStyle)
@@ -28,13 +29,13 @@ ident :: Parser String
 ident = Tok.identifier lexer
 
 zero :: Parser Expr
-zero = reservedNames "0" *> pure Zero
+zero = reservedNames "0" $> Zero
 
 true :: Parser Expr
-true = reservedNames "true" *> pure Tr
+true = reservedNames "true" $> Tr
 
 false :: Parser Expr
-false = reservedNames "false" *> pure Fl
+false = reservedNames "false" $> Fl
 
 succ' :: Parser Expr
 succ' = reservedNames "succ"
@@ -59,6 +60,7 @@ ifThenElse = do
 
   return $ If clause e1 e2
 
+-- | Clear white space before and EOF after parser
 contents :: Parser a -> Parser a
 contents p = do
   Tok.whiteSpace lexer
@@ -66,6 +68,7 @@ contents p = do
   eof
   return r
 
+-- | All possible @Expr@
 term :: Parser Expr
 term =  zero
     <|> true
@@ -77,4 +80,4 @@ term =  zero
     <|> parens term
 
 parseExpr :: String -> Either ParseError Expr
-parseExpr s = parse (contents term) "<stdin>" s
+parseExpr = parse (contents term) "<stdin>"

@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 4b37e979bdbe213b5b67c0bb2dbbdb4a0cb48598c1dcb0e4e6f7189f64c6413e
+-- hash: c5dc48210f70d0738f4421532bbe407199db6565a19267b0bbd859229614cec3
 
 name:           typed
 version:        0.1.0.0
@@ -21,20 +21,33 @@ source-repository head
   type: git
   location: https://github.com/jeffhappily/wyah
 
-executable typed-exe
-  main-is: Main.hs
+library
+  exposed-modules:
+      Typed.Eval
+      Typed.Parser
   other-modules:
-      Eval
-      Parser
       Paths_typed
   hs-source-dirs:
-      ./.
-  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
+      src
+  ghc-options: -Wall -Wall
   build-depends:
       base >=4.7 && <5
     , containers
-    , haskeline
-    , mtl
     , parsec
     , pretty
+    , transformers
+  default-language: Haskell2010
+
+executable typed-exe
+  main-is: Main.hs
+  other-modules:
+      Paths_typed
+  hs-source-dirs:
+      app
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , haskeline
+    , transformers
+    , typed
   default-language: Haskell2010

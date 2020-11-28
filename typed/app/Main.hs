@@ -1,11 +1,9 @@
 module Main where
 
--- import AST
-import Parser
-import Eval
--- import Pretty
+import Typed.Parser
+import Typed.Eval
 
-import Control.Monad.Trans
+import Control.Monad.IO.Class (liftIO)
 import System.Console.Haskeline
 
 process :: String -> IO ()
@@ -25,5 +23,5 @@ main = runInputT defaultSettings loop
     minput <- getInputLine "Arith> "
     case minput of
       Nothing -> outputStrLn "Goodbye."
-      Just input -> (liftIO $ process input) >> loop
+      Just input -> liftIO (process input) >> loop
 

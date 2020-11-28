@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 82a0238d89f0ee60acf305a85c94086e39f5dab045ecc781b047edf40ceb752b
+-- hash: ee0f6a4639f1b646cad90e0fc091c5c8b5bd6c2507fae6a697b4db8c9a241775
 
 name:           untyped
 version:        0.1.0.0
@@ -21,22 +21,35 @@ source-repository head
   type: git
   location: https://github.com/jeffhappily/wyah
 
-executable untyped-exe
-  main-is: Main.hs
+library
+  exposed-modules:
+      Untyped.AST
+      Untyped.Eval
+      Untyped.Parser
+      Untyped.Pretty
   other-modules:
-      AST
-      Eval
-      Parser
-      Pretty
       Paths_untyped
   hs-source-dirs:
-      ./.
-  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
+      src
+  ghc-options: -Wall -Wall
   build-depends:
       base >=4.7 && <5
     , containers
-    , haskeline
     , mtl
     , parsec
     , pretty
+  default-language: Haskell2010
+
+executable untyped-exe
+  main-is: Main.hs
+  other-modules:
+      Paths_untyped
+  hs-source-dirs:
+      app
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , haskeline
+    , mtl
+    , untyped
   default-language: Haskell2010

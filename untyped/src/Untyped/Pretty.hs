@@ -1,12 +1,11 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TypeSynonymInstances #-}
-module Pretty where
+module Untyped.Pretty where
+
+import Untyped.AST
 
 import Text.PrettyPrint
 import Prelude hiding ((<>))
-
-import AST
 
 class Pretty p where
   ppr :: Int -> p -> Doc
@@ -31,11 +30,10 @@ instance Pretty Name where
 
 instance Pretty Expr where
   ppr p e = case e of
-    Lit (LInt a)  -> text (show a)
-    Lit (LBool b) -> text (show b)
+    Lit n  -> text (show n)
     Var x   -> text x
-    App a b -> parensIf (p>0) $ (ppr (p+1) a) <+> (ppr p b)
-    Lam _ _ -> parensIf (p>0) $
+    App a b -> parensIf (p > 0) $ ppr (p+1) a <+> ppr p b
+    Lam _ _ -> parensIf (p > 0) $
          char '\\'
       <> hsep (fmap pp (viewVars e))
       <+> "->"

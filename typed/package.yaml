@@ -28,15 +28,21 @@ ghc-options:
 executables:
   typed-exe:
     main:                Main.hs
-    source-dirs:         .
+    source-dirs:         app
     ghc-options:
     - -threaded
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
+      - typed
+      - haskeline
+      - transformers
+
+library:
+  source-dirs: src
+  ghc-options: -Wall
+  dependencies:
     - containers
-    - haskeline
-    - mtl
     - parsec
     - pretty
-
+    - transformers

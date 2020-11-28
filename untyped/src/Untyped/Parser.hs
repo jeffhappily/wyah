@@ -1,8 +1,8 @@
-module Parser (
+module Untyped.Parser (
   parseExpr
 ) where
 
-import AST
+import Untyped.AST
 
 import Text.Parsec
 import Text.Parsec.String (Parser)
@@ -42,7 +42,7 @@ lambda = do
   return $ foldr Lam body names
 
 number :: Parser Expr
-number = (Lit . LInt . fromIntegral) <$> Tok.integer lexer
+number = Lit . LInt . fromIntegral <$> Tok.integer lexer
 
 contents :: Parser a -> Parser a
 contents p = do
@@ -63,4 +63,4 @@ expr = do
   return (foldl1 App es)
 
 parseExpr :: String -> Either ParseError Expr
-parseExpr s = parse (contents expr) "<stdin>" s
+parseExpr = parse (contents expr) "<stdin>"
