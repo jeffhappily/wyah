@@ -1,10 +1,10 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.33.0.
+-- This file has been generated from package.yaml by hpack version 0.34.4.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 6cbe835aecde963daa3e62a154cc0f113b8b402eae7c54f92f3fdfa29a88143c
+-- hash: bb26987ce48ff5282cfbd1233e531c6d88def843d918a58e5ed5671efe4aa364
 
 name:           interpreter
 version:        0.1.0.0
@@ -29,7 +29,7 @@ executable interpreter-exe
       HOAS
       Paths_interpreter
   hs-source-dirs:
-      ./.
+      ./
   ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5

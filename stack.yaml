@@ -1,9 +1,8 @@
 resolver:
-  url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/16/23.yaml
+  url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/18/8.yaml
 
 packages:
-
-- interpreter
-- stlc
-- typed
-- untyped
+  - interpreter
+  - stlc
+  - typed
+  - untyped
