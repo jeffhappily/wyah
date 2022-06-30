@@ -1,13 +1,17 @@
 module Main where
 
-import Untyped.AST ( Expr )
-import Untyped.Parser ( parseExpr )
-import Untyped.Eval ( runEval )
-import Untyped.Pretty ( ppexpr )
+import Untyped.AST (Expr)
+import Untyped.Eval (runEval)
+import Untyped.Parser (parseExpr)
+import Untyped.Pretty (ppexpr)
 
-import Control.Monad.Trans ( MonadIO(liftIO) )
-import System.Console.Haskeline
-    ( defaultSettings, getInputLine, outputStrLn, runInputT )
+import Control.Monad.Trans (MonadIO (liftIO))
+import System.Console.Haskeline (
+  defaultSettings,
+  getInputLine,
+  outputStrLn,
+  runInputT,
+ )
 
 showStep :: (Int, Expr) -> IO ()
 showStep (d, x) = putStrLn (replicate d ' ' ++ "=> " ++ ppexpr x)
@@ -25,8 +29,8 @@ process line = do
 main :: IO ()
 main = runInputT defaultSettings loop
   where
-  loop = do
-    minput <- getInputLine "Untyped> "
-    case minput of
-      Nothing -> outputStrLn "Goodbye."
-      Just input -> liftIO (process input) >> loop
+    loop = do
+      minput <- getInputLine "Untyped> "
+      case minput of
+        Nothing -> outputStrLn "Goodbye."
+        Just input -> liftIO (process input) >> loop

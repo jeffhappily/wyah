@@ -1,21 +1,25 @@
 module Untyped.Parser (
-  parseExpr
+  parseExpr,
 ) where
 
 import Untyped.AST
 
 import Text.Parsec
-import Text.Parsec.String (Parser)
 import Text.Parsec.Language (haskellStyle)
+import Text.Parsec.String (Parser)
 import qualified Text.Parsec.Token as Tok
 
 lexer :: Tok.TokenParser ()
 lexer = Tok.makeTokenParser style
-  where ops = ["->","\\","+","*","-","="]
-        names = []
-        style = haskellStyle {Tok.reservedOpNames = ops,
-                              Tok.reservedNames = names,
-                              Tok.commentLine = "#"}
+  where
+    ops = ["->", "\\", "+", "*", "-", "="]
+    names = []
+    style =
+      haskellStyle
+        { Tok.reservedOpNames = ops
+        , Tok.reservedNames = names
+        , Tok.commentLine = "#"
+        }
 
 parens :: Parser a -> Parser a
 parens = Tok.parens lexer
@@ -52,7 +56,8 @@ contents p = do
   return r
 
 term :: Parser Expr
-term =  parens expr
+term =
+  parens expr
     <|> variable
     <|> number
     <|> lambda

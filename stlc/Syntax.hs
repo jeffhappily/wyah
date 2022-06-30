@@ -1,6 +1,6 @@
 module Syntax where
 
-import Type
+import Type (Type)
 
 type Name = String
 

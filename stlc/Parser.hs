@@ -1,23 +1,26 @@
 module Parser (
-  parseExpr
+  parseExpr,
 ) where
 
-import Syntax
-import Type
-
-import Text.Parsec
-import Text.Parsec.String (Parser)
-import Text.Parsec.Language (haskellStyle)
+import Syntax (Expr (App, Lam, Lit, Var), Lit (LBool, LInt))
+import Text.Parsec (ParseError, eof, many1, parse, (<|>))
 import qualified Text.Parsec.Expr as Ex
+import Text.Parsec.Language (haskellStyle)
+import Text.Parsec.String (Parser)
 import qualified Text.Parsec.Token as Tok
+import Type (Type (..))
 
 lexer :: Tok.TokenParser ()
 lexer = Tok.makeTokenParser style
-  where ops = ["->","\\","+","*","-","=", ":"]
-        names = []
-        style = haskellStyle {Tok.reservedOpNames = ops,
-                              Tok.reservedNames = names,
-                              Tok.commentLine = "#"}
+  where
+    ops = ["->", "\\", "+", "*", "-", "=", ":"]
+    names = []
+    style =
+      haskellStyle
+        { Tok.reservedOpNames = ops
+        , Tok.reservedNames = names
+        , Tok.commentLine = "#"
+        }
 
 parens :: Parser a -> Parser a
 parens = Tok.parens lexer
@@ -45,11 +48,12 @@ lambda = do
   return $ Lam name ty body
 
 bool :: Parser Expr
-bool =  (reserved "True" >> return (Lit (LBool True)))
+bool =
+  (reserved "True" >> return (Lit (LBool True)))
     <|> (reserved "False" >> return (Lit (LBool False)))
 
 number :: Parser Expr
-number = (Lit . LInt . fromIntegral) <$> Tok.integer lexer
+number = Lit . LInt . fromIntegral <$> Tok.integer lexer
 
 contents :: Parser a -> Parser a
 contents p = do
@@ -59,7 +63,8 @@ contents p = do
   return r
 
 term :: Parser Expr
-term =  parens expr
+term =
+  parens expr
     <|> bool
     <|> variable
     <|> number
@@ -71,7 +76,7 @@ expr = do
   return (foldl1 App es)
 
 tyatom :: Parser Type
-tyatom = tylit <|> (parens type')
+tyatom = tylit <|> parens type'
 
 tylit :: Parser Type
 tylit = (reservedOp "Bool" >> return TBool) <|> (reservedOp "Int" >> return TInt)
@@ -80,9 +85,9 @@ type' :: Parser Type
 type' = Ex.buildExpressionParser tyops tyatom
   where
     infixOp x f = Ex.Infix (reservedOp x >> return f)
-    tyops = [
-        [infixOp "->" TArr Ex.AssocRight]
+    tyops =
+      [ [infixOp "->" TArr Ex.AssocRight]
       ]
 
 parseExpr :: String -> Either ParseError Expr
-parseExpr s = parse (contents expr) "<stdin>" s
+parseExpr = parse (contents expr) "<stdin>"

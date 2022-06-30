@@ -4,14 +4,15 @@ import Typed.Eval
 
 import Data.Functor (($>))
 import Text.Parsec
-import Text.Parsec.String (Parser)
 import Text.Parsec.Language (haskellStyle)
+import Text.Parsec.String (Parser)
 import qualified Text.Parsec.Token as Tok
 
 lexer :: Tok.TokenParser ()
 lexer = Tok.makeTokenParser style
-  where names = ["if", "then", "else", "pred", "succ", "iszero", "true", "false"]
-        style = haskellStyle { Tok.reservedNames = names }
+  where
+    names = ["if", "then", "else", "pred", "succ", "iszero", "true", "false"]
+    style = haskellStyle {Tok.reservedNames = names}
 
 parens :: Parser a -> Parser a
 parens = Tok.parens lexer
@@ -38,16 +39,19 @@ false :: Parser Expr
 false = reservedNames "false" $> Fl
 
 succ' :: Parser Expr
-succ' = reservedNames "succ"
-     *> (Succ <$> term)
+succ' =
+  reservedNames "succ"
+    *> (Succ <$> term)
 
 pred' :: Parser Expr
-pred' = reservedNames "pred"
-     *> (Pred <$> term)
+pred' =
+  reservedNames "pred"
+    *> (Pred <$> term)
 
 isZero :: Parser Expr
-isZero = reservedNames "iszero"
-      *> (IsZero <$> term)
+isZero =
+  reservedNames "iszero"
+    *> (IsZero <$> term)
 
 ifThenElse :: Parser Expr
 ifThenElse = do
@@ -70,7 +74,8 @@ contents p = do
 
 -- | All possible @Expr@
 term :: Parser Expr
-term =  zero
+term =
+  zero
     <|> true
     <|> false
     <|> succ'

@@ -1,9 +1,9 @@
-module CallByNeed
-  ( test1
-  , test2
-  ) where
+module CallByNeed (
+  test1,
+  test2,
+) where
 
-import           Data.IORef (IORef, newIORef, readIORef, writeIORef)
+import Data.IORef (IORef, newIORef, readIORef, writeIORef)
 
 data Expr
   = EVar String
@@ -20,8 +20,8 @@ data Value
   | VClosure (Thunk -> IO Value)
 
 instance Show Value where
-  show (VBool b)    = show b
-  show (VInt n)     = show n
+  show (VBool b) = show b
+  show (VInt n) = show n
   show (VClosure _) = "<<closure>>"
 
 type Thunk = () -> IO Value
@@ -48,7 +48,7 @@ mkThunk env x body =
 
 lookupEnv :: Env -> String -> IO (IORef Thunk)
 lookupEnv [] s = error $ "Unbound Variable" ++ s
-lookupEnv ((x, a):xs) s =
+lookupEnv ((x, a) : xs) s =
   if x == s
     then return a
     else lookupEnv xs s
@@ -58,8 +58,7 @@ eval env ex =
   case ex of
     EVar n -> do
       th <- lookupEnv env n
-      v <- force th
-      return v
+      force th
     ELam x e -> return $ VClosure (mkThunk env x e)
     EApp a b -> do
       VClosure c <- eval env a

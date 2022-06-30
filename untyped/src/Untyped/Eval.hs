@@ -1,12 +1,14 @@
 module Untyped.Eval (
-  runEval
+  runEval,
 ) where
 
-import Untyped.AST
-
-import Control.Monad.State
-import Control.Monad.Writer
+import Control.Monad.State (State, evalState, gets, modify)
+import Control.Monad.Writer (
+  MonadWriter (tell),
+  WriterT (runWriterT),
+ )
 import qualified Data.Map as Map
+import Untyped.AST (Expr (..), Lit (LInt))
 
 data Value
   = VInt Integer
@@ -26,14 +28,15 @@ printExprWithScope (Lit l) _ = show l
 
 newtype EvalState = EvalState
   { depth :: Int
-  } deriving (Show)
+  }
+  deriving (Show)
 
 -- | Run evaluation after increasing the depth, then decrease it afterwards
 inc :: Eval a -> Eval a
 inc m = do
-  modify $ \s -> s { depth = depth s + 1 }
+  modify $ \s -> s {depth = depth s + 1}
   out <- m
-  modify $ \s -> s { depth = depth s - 1 }
+  modify $ \s -> s {depth = depth s - 1}
   return out
 
 -- | Create @Step@ and push to @Eval@ state
@@ -54,17 +57,13 @@ type Scope = Map.Map String Value
 
 eval :: Scope -> Expr -> Eval Value
 eval env expr = case expr of
-
   Lit (LInt x) -> do
     return $ VInt (fromIntegral x)
-
   Var x -> do
     red expr
     return $ env Map.! x
-
   Lam x body -> inc $ do
     return (VClosure x body env)
-
   App a b -> inc $ do
     x <- eval env a
     red a
@@ -78,7 +77,7 @@ extend env v t = Map.insert v t env
 apply :: Value -> Value -> Eval Value
 apply (VClosure n e clo) ex = do
   eval (extend clo n ex) e
-apply _ _  = error "Tried to apply non-closure"
+apply _ _ = error "Tried to apply non-closure"
 
 emptyScope :: Scope
 emptyScope = Map.empty

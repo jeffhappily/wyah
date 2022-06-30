@@ -1,6 +1,6 @@
 module Typed.Eval where
 
-import Control.Monad.Trans.Except
+import Control.Monad.Trans.Except (Except, runExcept, throwE)
 
 data Expr
   = Tr
@@ -16,24 +16,27 @@ nf :: Expr -> Expr
 nf t = maybe t nf (eval1 t)
 
 eval :: Expr -> Maybe Expr
-eval t = if isVal (nf t)
-  then Just (nf t)
-  else Nothing -- term is "stuck"
+eval t =
+  if isVal (nf t)
+    then Just (nf t)
+    else Nothing -- term is "stuck"
 
 -- Evaluate a single step.
 eval1 :: Expr -> Maybe Expr
 eval1 expr = case expr of
-  Succ t                    -> Succ <$> eval1 t
-  Pred Zero                 -> Just Zero
-  Pred (Succ t) | isNum t   -> Just t
-  Pred t                    -> Pred <$> eval1 t
-  IsZero Zero               -> Just Tr
-  IsZero (Succ t) | isNum t -> Just Fl
-  IsZero t                  -> IsZero <$> eval1 t
-  If Tr  c _                -> Just c
-  If Fl _ a                 -> Just a
-  If t c a                  -> (\t' -> If t' c a) <$> eval1 t
-  _                         -> Nothing
+  Succ t -> Succ <$> eval1 t
+  Pred Zero -> Just Zero
+  Pred (Succ t)
+    | isNum t -> Just t
+  Pred t -> Pred <$> eval1 t
+  IsZero Zero -> Just Tr
+  IsZero (Succ t)
+    | isNum t -> Just Fl
+  IsZero t -> IsZero <$> eval1 t
+  If Tr c _ -> Just c
+  If Fl _ a -> Just a
+  If t c a -> (\t' -> If t' c a) <$> eval1 t
+  _ -> Nothing
 
 isVal :: Expr -> Bool
 isVal Tr = True
@@ -59,9 +62,9 @@ instance Show Type where
 type Check a = Except TypeError a
 
 data TypeError
-  = TypeMismatch Type Type
-              -- ^     ^--- Expected type
-              -- |--- Actual Type
+  = -- |     ^--- Expected type
+    -- |--- Actual Type
+    TypeMismatch Type Type
 
 instance Show TypeError where
   show (TypeMismatch actual expected) = "Type mismatch: " ++ show actual ++ " is not " ++ show expected
@@ -75,33 +78,29 @@ typeof expr = case expr of
     ta <- typeof a
     case ta of
       TNat -> return TNat
-      _    -> throwE $ TypeMismatch ta TNat
-
+      _ -> throwE $ TypeMismatch ta TNat
   Pred a -> do
     ta <- typeof a
     case ta of
       TNat -> return TNat
-      _    -> throwE $ TypeMismatch ta TNat
-
+      _ -> throwE $ TypeMismatch ta TNat
   IsZero a -> do
     ta <- typeof a
     case ta of
       TNat -> return TBool
-      _    -> throwE $ TypeMismatch ta TNat
-
+      _ -> throwE $ TypeMismatch ta TNat
   If a b c -> do
     ta <- typeof a
     tb <- typeof b
     tc <- typeof c
     if ta /= TBool
-    then throwE $ TypeMismatch ta TBool
-    else
-      if tb /= tc
-      then throwE $ TypeMismatch ta tb
-      else return tc
-
-  Tr   -> return TBool
-  Fl   -> return TBool
+      then throwE $ TypeMismatch ta TBool
+      else
+        if tb /= tc
+          then throwE $ TypeMismatch ta tb
+          else return tc
+  Tr -> return TBool
+  Fl -> return TBool
   Zero -> return TNat
 
 runEval :: Expr -> Either TypeError (Expr, Type)
