@@ -37,3 +37,4 @@ eval env term = case term of
 evalPrim :: PrimOp -> Value -> Value -> Value
 evalPrim Add (VInt a) (VInt b) = VInt (a + b)
 evalPrim Mul (VInt a) (VInt b) = VInt (a * b)
+evalPrim _ _ _ = error "Invalid call to 'evalPrim'"

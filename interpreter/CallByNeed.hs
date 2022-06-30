@@ -41,10 +41,9 @@ force ref = do
   return v
 
 mkThunk :: Env -> String -> Expr -> (Thunk -> IO Value)
-mkThunk env x body =
-  \a -> do
-    a' <- newIORef a
-    eval ((x, a') : env) body
+mkThunk env x body a = do
+  a' <- newIORef a
+  eval ((x, a') : env) body
 
 lookupEnv :: Env -> String -> IO (IORef Thunk)
 lookupEnv [] s = error $ "Unbound Variable" ++ s

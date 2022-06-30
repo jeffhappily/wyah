@@ -15,7 +15,7 @@ id :: Expr (a -> a)
 id = Lam (\x -> x)
 
 tr :: Expr (a -> b -> a)
-tr = Lam (\x -> (Lam (\y -> x)))
+tr = Lam (\x -> Lam (\_y -> x))
 
 fl :: Expr (a -> b -> b)
-fl = Lam (\x -> (Lam (\y -> y)))
+fl = Lam (\_x -> Lam (\y -> y))

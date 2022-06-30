@@ -3,9 +3,17 @@
 
 module Untyped.Pretty where
 
-import Untyped.AST
-
-import Text.PrettyPrint
+import Text.PrettyPrint (
+  Doc,
+  char,
+  hsep,
+  parens,
+  render,
+  text,
+  (<+>),
+  (<>),
+ )
+import Untyped.AST (Expr (..), Name)
 import Prelude hiding ((<>))
 
 class Pretty p where

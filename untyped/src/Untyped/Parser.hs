@@ -2,12 +2,11 @@ module Untyped.Parser (
   parseExpr,
 ) where
 
-import Untyped.AST
-
-import Text.Parsec
+import Text.Parsec (ParseError, eof, many1, parse, (<|>))
 import Text.Parsec.Language (haskellStyle)
 import Text.Parsec.String (Parser)
 import qualified Text.Parsec.Token as Tok
+import Untyped.AST (Expr (..), Lit (LInt))
 
 lexer :: Tok.TokenParser ()
 lexer = Tok.makeTokenParser style
